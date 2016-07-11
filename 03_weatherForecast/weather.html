@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Weather Forecast Assignment</title>
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('form').submit(function(){
+				var city = $('#city').val();
+				var url = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=9f4451308f82da6278e398e1bbff93f3";
+				$.get(url, function(res){
+					var temp = res.main.temp * (9/5) - 459.67;
+					temp = Math.round(temp * 10) / 10;
+					var display = "<h1>" + res.name + " </h1>";
+					display += "<h3>Temperature: " + temp + " &#8457;</h3>";
+					$('#result').html(display);
+				}, 'json');
+				return false;
+			});
+		});
+	</script>
+</head>
+<body>
+	<div id="wrapper">
+		<form>
+			<input type="text" id="city">
+			<input type="submit" value="Search Weather">
+		</form>
+		<div id="result"></div>
+	</div>
+</body>
+</html>
