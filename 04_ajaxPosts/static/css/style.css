@@ -1,0 +1,18 @@
+.post{
+    width: 150px;
+    height: 150px;
+    padding: 10px;
+    border: 1px solid black;
+    overflow-y: auto;
+    display: inline-block;
+}
+#wrapper {
+    width: 820px;
+    margin: 0 auto;
+}
+textarea {
+    width: 150px;
+    height: 150px;
+    padding: 10px;
+    font-size: 1.2em;
+}

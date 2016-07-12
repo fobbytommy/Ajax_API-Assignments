@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Ajax Posts Assignment</title>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('form').submit(function(){
+                $.post('/posts/create', $(this).serialize(), function(res){
+                    var posts = "";
+                    for (var i = 0; i < res.length; i++){
+                        posts += "<div class='post'>\n";
+                        posts += "<p>" + res[i].description + "</p>\n";
+                        posts += "</div>\n";
+                    }
+                    $('#posts').html(posts);
+                }, 'json');
+                return false;
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <div id="wrapper">
+        <h1>My Posts</h1>
+        <div id="posts">
+            {% for post in posts %}
+            <div class="post">
+                <p>{{ post['description'] }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        <form action="/posts/create" method="POST">
+            <h4><label for="description">Add a note:</label></h4>
+            <p><textarea name="description" id="description"></textarea></p>
+            <p><input type="submit" value="Post It!"></p>
+        </form>
+    </div>
+</body>
+</html>
