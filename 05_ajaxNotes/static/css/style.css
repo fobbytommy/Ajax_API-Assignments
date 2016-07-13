@@ -1,0 +1,14 @@
+section {
+    width: 180px;
+}
+textarea {
+    font-size: .95em;
+    width: 180px;
+    height: 180px;
+    resize: vertical;
+}
+section.note {
+    vertical-align: top;
+    display: inline-block;
+    margin-left: 10px;
+}
