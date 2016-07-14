@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Task Manager Assignment</title>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <script type="text/javascript">
+        function attach_handlers(){
+
+            $('.edit').submit(function(){
+                var flag = $(this).attr('flag');
+                // console.log(flag);
+                if (flag == 'on') {
+                    var task = $(this).siblings('p').html();
+                    $(this).siblings('p').html("<input type='text' value='" + task + "'>" );
+                    $(this).attr('flag','off');
+                } 
+                else if (flag == 'off') {
+                    var updated_task = $(this).siblings('p').children().val();
+                    data = { name: updated_task }
+                    var url = $(this).attr('action');
+                    // console.log(url, data);
+                    $.post(url, data);
+                    $(this).siblings('p').html(updated_task);
+                    $(this).attr('flag','on');
+                }
+                return false;
+            });
+
+            $('.delete').click(function(){
+                console.log('this is working');
+                $(this).prop('disabled', true);
+                $(this).parent().siblings('form').children().prop('disabled', true);
+                $(this).parent().siblings('p').css('text-decoration', 'line-through');
+                // console.log(this);
+                delete_handlers(this);
+            });
+        }
+
+        function delete_handlers(tag_info){
+            // console.log(nice);
+            var url = $(tag_info).parent().attr('action');
+            $.post(url);
+        }
+
+        $(document).ready(function(){
+
+            $.get('/show', function(res){
+                $('#tasks').html(res);
+                 attach_handlers();
+            });
+
+            $('#add').submit(function(e){
+                $.post('/add', $(this).serialize());
+                $.get('/show', function(res){
+                    $('#tasks').html(res);
+                    attach_handlers();
+                });
+                e.preventDefault();
+            });
+           
+         });
+
+    </script>  
+</head>
+<body>
+    <div id="wrapper">
+        <h1>List of Task:</h1>    
+        <div id="tasks"></div>
+        <div id="create_new">
+            <form action="/add" method="POST" id="add">
+                <h4><label for="new_task">Create a New Task:</label></h4>
+                <input type="text" name="new_task" id="new_task">
+                <input type="submit" value="Add Task">
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{% for task in tasks %}
+    <div class="task">
+        <form action="/edit/{{ task['id'] }}" method="POST" class="edit" flag="on">
+            <input type="submit" value="Edit" class="edit">
+        </form>
+        <form action="/delete/{{ task['id'] }}" method="POST">
+            <input type="checkbox" name="delete" class="delete">
+        </form>
+        <p>{{ task['name'] }}</p>
+    </div>
+{% endfor %}
