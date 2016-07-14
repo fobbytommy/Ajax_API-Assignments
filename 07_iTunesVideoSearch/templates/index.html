@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>iTunes Video Preview Assignment</title>
+		<script type="text/javascript" src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$('img').hide(); // initially hide "loading" screen
+				$('form').submit(function(){
+					$('video').hide();
+					$('img').show(); // show "loading" screen
+					$.post($(this).attr('action'), $(this).serialize(), function(res){
+						// console.log(res.results);
+						var html_str = "";
+						if (res.results.length != 0){ // if search has something,
+							var url = res.results[0].previewUrl;
+							html_str += "<video controls src='" + url + "'></video>";
+						} else { // if search didn't find anything,
+							html_str += "<h3>Search Not Found</h3>";
+						}
+						$('img').hide(); // hide "loading" screen
+						$('#result').html(html_str); // put either video or not found message
+
+					}, 'json');
+					// console.log('this is working');
+					return false;
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<h1>Enter Artist's Name:</h1>
+		<form action="/search" method="POST">
+			<input type="search" name="artist" id="artist">
+			<input type="submit" value="search">
+		</form>
+		<div id="result"></div>
+		<img src="{{ url_for('static', filename='please_wait.gif') }}" alt="loading">
+	</body>
+</html>
