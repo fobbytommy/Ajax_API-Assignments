@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Leads Search Assignment</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jquery-ui.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='jquery-ui.min.js') }}"></script>
+	<script type="text/javascript">
+		$( function() {
+			$( "#from, #to" ).datepicker({
+				changeYear: true,
+				yearRange: '2011:2013',
+				defaultDate: '2011-1-1',
+				dateFormat: 'yy-mm-dd',
+				onSelect: function(){
+					var url = $('#date_search').attr('action');
+					var data = $('#date_search').serialize();
+					console.log(url,data);
+					$.post(url, data, function(res){
+						if (res.length != 0) {
+							console.log('found');
+							var html_str = "";
+							for (var i = 0, j = res.length; i < j; i++) {
+								if (i % 2 == 0) {
+									html_str += "<tr>";
+								} else {
+									html_str += "<tr class='alt'>";
+								}
+								html_str += "<td>" + res[i].id + "</td>";
+								html_str += "<td>" + res[i].first_name + "</td>";
+								html_str += "<td>" + res[i].last_name + "</td>";
+								html_str += "<td>" + res[i].registered_datetime + "</td>";
+								html_str += "<td>" + res[i].email + "</td>";
+								html_str += "</tr>"
+							}
+						} else {
+							html_str +="<p>not found</p>";
+							console.log('not found');
+						}
+						$('tbody').html(html_str);
+						console.log(res);
+					}, 'json');
+				
+				}
+			});
+		} );
+
+	
+
+		$(document).ready(function(){
+
+			$('#name_search').keyup(function(){
+
+				var url = $(this).attr('action');
+				var data = $(this).serialize();
+				console.log(data);
+				$.post(url, data, function(res){
+					if (res.length != 0) {
+						console.log('found');
+						var html_str = "";
+						for (var i = 0, j = res.length; i < j; i++) {
+							if (i % 2 == 0) {
+								html_str += "<tr>";
+							} else {
+								html_str += "<tr class='alt'>";
+							}
+							html_str += "<td>" + res[i].id + "</td>";
+							html_str += "<td>" + res[i].first_name + "</td>";
+							html_str += "<td>" + res[i].last_name + "</td>";
+							html_str += "<td>" + res[i].registered_datetime + "</td>";
+							html_str += "<td>" + res[i].email + "</td>";
+							html_str += "</tr>"
+						}
+					} else {
+						html_str +="<p>not found</p>";
+						console.log('not found');
+					}
+					$('tbody').html(html_str);
+					console.log(res);
+				}, 'json');
+				
+				
+			});
+		});
+	</script>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="search">
+			<form action="/search/name" method="POST" id="name_search">
+				<label for="name">Name:</label>
+				<input type="text" name="name" id="name">
+				
+			</form>
+			<form action="/search/date" method="" id="date_search">
+				<label for="name">From:</label>
+				<input type="text" name="from" id="from">
+				<label for="name">To:</label>
+				<input type="text" name="to" id="to">
+			</form>
+		</div>
+		<div class="datagrid">
+			<table>
+				<thead>
+					<tr>
+						<th>leads id</th>
+						<th>first name</th>
+						<th>last name</th>
+						<th>registered datetime</th>
+						<th>email</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for i in range(0, leads|length) %}
+					{% if i % 2 == 0 %}
+					<tr>
+					{% else %}
+					<tr class="alt">
+					{% endif %}
+						<td>{{ leads[i].id }}</td>
+						<td>{{ leads[i].first_name }}</td>
+						<td>{{ leads[i].last_name }}</td>
+						<td>{{ leads[i].registered_datetime }}</td>
+						<td>{{ leads[i].email }}</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>	
+	</div>
+</body>
+</html>
