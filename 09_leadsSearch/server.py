@@ -5,13 +5,13 @@ mysql = MySQLConnector(app, 'lead_gen_business')
 @app.route('/')
 def index():
 	select_query = "SELECT * FROM leads LIMIT 10"
+	# select_query = "SELECT * FROM leads"
 	leads = mysql.query_db(select_query)
 	return render_template('index.html', leads = leads)
 
 @app.route('/search/name', methods=["POST"])
 def search_name():
 	name = request.form['name']
-	print name.find(' ')
 	if name.find(' ') >= 1:
 		slicer = name.find(' ')
 		name_1 = name[:slicer]
@@ -19,12 +19,12 @@ def search_name():
 		select_query = "SELECT * FROM leads WHERE first_name LIKE :name_1 OR first_name LIKE :name_2 OR last_name LIKE :name_1 OR last_name LIKE :name_2"
 		data = { 'name_1': '%'+name_1+'%', 'name_2': '%'+name_2+'%' }
 		result = mysql.query_db(select_query, data)
-		print 'this is slicing'
+		# print 'this is slicing'
 	else:
 		select_query = "SELECT * FROM leads WHERE first_name LIKE :name OR last_name LIKE :name"
 		data = { 'name': '%'+name+'%' }
 		result = mysql.query_db(select_query, data)
-		print 'this is not slicing'
+		# print 'this is not slicing'
 	return jsonify(result)
 
 @app.route('/search/date', methods=['POST'])
